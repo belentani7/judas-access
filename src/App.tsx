@@ -44,25 +44,66 @@ function loadAgent(): AgentData | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as { data?: AgentData; expiry?: number };
-    if (!parsed?.data || !parsed?.expiry || Date.now() > parsed.expiry) {
+    if (raw.length > 1500) {
       localStorage.removeItem(STORAGE_KEY);
       return null;
     }
-    return parsed.data;
+    const record: unknown = JSON.parse(raw);
+    if (!record || typeof record !== 'object' || Array.isArray(record)) throw new Error('Invalid record');
+    const parsed = record as { data?: unknown; expiry?: unknown };
+    if (typeof parsed.expiry !== 'number' || !Number.isFinite(parsed.expiry) ||
+        parsed.expiry <= Date.now() || parsed.expiry > Date.now() + 24 * 3600 * 1000) {
+      throw new Error('Session expired or invalid');
+    }
+    if (!parsed.data || typeof parsed.data !== 'object' || Array.isArray(parsed.data)) {
+      throw new Error('Invalid persona');
+    }
+    const item = parsed.data as Partial<AgentData>;
+    // Clear older releases that accidentally persisted handwritten signatures
+    // or a visitor's optional real name in unencrypted browser storage.
+    if ('signature' in item || 'realName' in item ||
+        typeof item.codename !== 'string' || item.codename.length < 3 || item.codename.length > 24 ||
+        typeof item.division !== 'string' || item.division.length > 30 ||
+        typeof item.divisionAlias !== 'string' || item.divisionAlias.length > 60 ||
+        typeof item.agentId !== 'string' || item.agentId.length > 60 ||
+        typeof item.hash !== 'string' || item.hash.length > 64 ||
+        typeof item.ts !== 'string' || !Number.isFinite(Date.parse(item.ts))) {
+      throw new Error('Outdated or untrusted local record');
+    }
+    return {
+      codename: item.codename,
+      division: item.division,
+      divisionAlias: item.divisionAlias,
+      agentId: item.agentId,
+      hash: item.hash,
+      ts: item.ts,
+      bypass: item.bypass === true,
+    };
   } catch {
+    try { localStorage.removeItem(STORAGE_KEY); } catch { /* storage blocked */ }
     return null;
   }
 }
 
 function saveAgent(d: AgentData) {
+  // This is narrative continuity, NOT identity authentication.
+  // Never persist a handwritten signature, visitor's real name or image.
   try {
+    const safe: AgentData = {
+      codename: d.codename,
+      division: d.division,
+      divisionAlias: d.divisionAlias,
+      agentId: d.agentId,
+      hash: d.hash,
+      ts: d.ts,
+      bypass: d.bypass === true,
+    };
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ data: d, expiry: Date.now() + 24 * 3600 * 1000 }),
+      JSON.stringify({ data: safe, expiry: Date.now() + 24 * 3600 * 1000 }),
     );
   } catch {
-    /* almacenamiento no disponible */
+    /* local storage unavailable; journey remains functional in this session */
   }
 }
 
