@@ -38,8 +38,8 @@ export default function LockScreen({ onBegin, returning, onEnterDirect, onRestar
           <p className="mt-5 max-w-lg font-body text-sm leading-relaxed text-dim">
             Este terminal pertenece al núcleo <span className="text-neon">JUDAS</span> y está
             sellado por el Protocolo Omnipresencia v3.0. Para cruzar la puerta, el sistema exige
-            verificación biométrica completa y firma de confidencialidad. Cada intento queda
-            registrado en el archivo del Cronista.
+            tres pruebas visuales ficticias y un sello de viaje simbólico. Los sensores no usan
+            cámara, huellas ni retina real; los intentos no se envían a ningún archivo externo.
           </p>
 
           <ol className="mt-6 max-w-lg border-l-2 border-blood pl-4">
