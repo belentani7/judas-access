@@ -8,8 +8,8 @@ export function pushLog(msg: string) {
 
 export default function LiveTerminal() {
   const [lines, setLines] = useState<string[]>([
-    'Sistema en línea.',
-    'Analizando patrones de interacción del usuario...',
+    'Terminal escénico local.',
+    'Pruebas visuales: no se analizan datos biométricos...',
   ]);
   const idx = useRef(0);
   const boxRef = useRef<HTMLDivElement | null>(null);
@@ -37,7 +37,7 @@ export default function LiveTerminal() {
     <aside className="fixed bottom-4 left-4 z-40 hidden w-80 border border-neon/20 bg-black/70 backdrop-blur-sm md:block">
       <header className="flex items-center justify-between border-b border-neon/20 px-3 py-1.5">
         <span className="font-term text-[10px] tracking-[0.22em] text-dim">
-          SYSTEM CORE TERMINAL
+          TERMINAL NARRATIVO · SIMULACIÓN
         </span>
         <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-neon" />
       </header>
