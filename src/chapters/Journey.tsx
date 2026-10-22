@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { AgentData } from '../lib/types';
 import { REDIRECT_URL } from '../lib/constants';
+import { canTravel } from '../lib/journey-navigation.mjs';
 import PlanetViewer from './PlanetViewer';
 import Hyperspace from './Hyperspace';
 import EscapeRoom from './EscapeRoom';
@@ -30,9 +31,9 @@ export default function Journey({ agent, onExit }: Props) {
   const [coreDone, setCoreDone] = useState(false);
 
   const travel = useCallback(
-    (target: Scene) => {
+    (target: Scene, justSolved = false) => {
       if (target === scene) return;
-      if (target === 'core' && !roomSolved) {
+      if (!canTravel(scene, target, roomSolved || justSolved)) {
         pushLog('El Núcleo está sellado: primero abre la Cámara S1.');
         beep(160, 0.15, 'sawtooth', 0.03);
         return;
@@ -126,7 +127,9 @@ export default function Journey({ agent, onExit }: Props) {
               codename={agent.codename}
               onSolve={() => {
                 setRoomSolved(true);
-                travel('core');
+                // React state updates asynchronously: permit this one transition
+                // immediately after solving the room, never before.
+                travel('core', true);
               }}
             />
           )}
