@@ -99,8 +99,8 @@ export default function SignaturePad({ codename, onComplete }: Props) {
       phase={6}
       total={6}
       label="FASE 06 // VÍNCULO FINAL"
-      title="FIRMA DE CONFIDENCIALIDAD"
-      subtitle="Última cerradura de la caja fuerte. Lee el protocolo, acepta y traza tu firma: la tinta queda vinculada a tu código de agente de forma irreversible."
+      title="SELLO DEL PACTO NARRATIVO"
+      subtitle="Última escena de la caja fuerte: dibuja un símbolo para cerrar el ritual. No es una firma legal ni se guarda en el dispositivo tras cerrar la sesión."
     >
       <div className="scroll-red max-h-52 overflow-y-auto border border-white/10 bg-black/50 p-4">
         <p className="font-term text-[10px] tracking-[0.3em] text-neon">
@@ -167,7 +167,7 @@ export default function SignaturePad({ codename, onComplete }: Props) {
 
       {nudge && (
         <p className="mt-3 border border-neon/40 bg-neon/10 px-3 py-2 font-term text-[10px] tracking-[0.2em] text-neon">
-          ⚠ FIRMA OBLIGATORIA — TRAZA TU FIRMA Y ACEPTA EL PROTOCOLO
+          SELLO SIMBÓLICO — TU TRAZO NO SE GUARDA COMO FIRMA LEGAL
         </p>
       )}
 
@@ -180,7 +180,7 @@ export default function SignaturePad({ codename, onComplete }: Props) {
           onClick={sign}
           className={`btn-neon text-sm ${!hasInk || !accepted ? 'opacity-60' : ''}`}
         >
-          FIRMAR Y ACEPTAR EL VIAJE
+          SELLAR Y CONTINUAR EL VIAJE
         </button>
       </div>
     </PhaseFrame>

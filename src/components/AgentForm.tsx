@@ -67,7 +67,7 @@ export default function AgentForm({ onComplete }: Props) {
       total={6}
       label="FASE 04 // ALTA OPERATIVA"
       title="REGISTRO DE AGENTE"
-      subtitle="Las tres capas biométricas están superadas. Ahora el sistema necesita saber quién camina por el viaje: elige un código de agente y la división del artefacto donde quedarás integrado."
+      subtitle="Las tres pruebas visuales de la ficción están superadas. Elige un alias de agente y una división narrativa. No se verifica tu identidad real."
     >
       <form onSubmit={submit} className={shaking ? 'shake' : undefined} noValidate>
         <div className="grid gap-4 sm:grid-cols-2">
@@ -86,7 +86,7 @@ export default function AgentForm({ onComplete }: Props) {
           </label>
           <label className="block">
             <span className="mb-1.5 block font-term text-[10px] tracking-[0.25em] text-dim">
-              NOMBRE REAL (OPCIONAL)
+              NOMBRE REAL (OPCIONAL · NO SE GUARDA)
             </span>
             <input
               className="field"
