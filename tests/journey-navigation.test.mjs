@@ -24,3 +24,11 @@ test("real EscapeRoom uses justSolved flag to bypass stale React closure", () =>
   assert.match(source,/setRoomSolved\(true\);[\s\S]{0,200}travel\('core', true\)/);
   assert.match(source,/canTravel\(scene, target, roomSolved \|\| justSolved\)/);
 });
+
+test("archive status only claims recovered after navigating to archive", () => {
+  const journey = readFileSync("src/chapters/Journey.tsx","utf8");
+  assert.match(journey, /const \[archiveVisited, setArchiveVisited\] = useState\(false\)/);
+  assert.match(journey, /warpTo === 'archive'\) setArchiveVisited\(true\)/);
+  assert.match(journey, /archiveVisited \? 'RECUPERADO' : 'PENDIENTE'/);
+  assert.doesNotMatch(journey, /ARCHIVO VENOM DESENCRYPTADO/);
+});
