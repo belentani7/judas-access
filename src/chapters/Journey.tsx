@@ -29,6 +29,7 @@ export default function Journey({ agent, onExit }: Props) {
   const [warpTo, setWarpTo] = useState<Scene | null>(null);
   const [roomSolved, setRoomSolved] = useState(false);
   const [coreDone, setCoreDone] = useState(false);
+  const [archiveVisited, setArchiveVisited] = useState(false);
 
   const travel = useCallback(
     (target: Scene, justSolved = false) => {
@@ -47,6 +48,7 @@ export default function Journey({ agent, onExit }: Props) {
   const onWarpDone = useCallback(() => {
     if (warpTo) {
       setScene(warpTo);
+      if (warpTo === 'archive') setArchiveVisited(true);
       pushLog(`Salto hiperespacial completado: ${SCENE_META[warpTo].label}.`);
     }
     setWarpTo(null);
@@ -155,7 +157,8 @@ export default function Journey({ agent, onExit }: Props) {
               <span className="text-dim">VÍNCULO DE VOZ {coreDone ? 'CONFIRMADO' : 'PENDIENTE'}</span>
             </p>
             <p className="font-term text-[10px] tracking-[0.2em]">
-              <span className="text-term">✓</span> <span className="text-dim">ARCHIVO VENOM DESENCRYPTADO</span>
+              <span className={archiveVisited ? 'text-term' : 'text-neon'}>{archiveVisited ? '✓' : '▲'}</span>{' '}
+              <span className="text-dim">ARCHIVO VENOM {archiveVisited ? 'RECUPERADO' : 'PENDIENTE'}</span>
             </p>
           </div>
 
