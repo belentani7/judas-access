@@ -32,3 +32,13 @@ test("archive status only claims recovered after navigating to archive", () => {
   assert.match(journey, /archiveVisited \? 'RECUPERADO' : 'PENDIENTE'/);
   assert.doesNotMatch(journey, /ARCHIVO VENOM DESENCRYPTADO/);
 });
+
+
+test("chapter navigation announces current scene and locked core to screen readers", () => {
+  const journey = readFileSync("src/chapters/Journey.tsx", "utf8");
+  assert.match(journey, /aria-disabled=\{isLocked\}/);
+  assert.match(journey, /aria-current=\{scene === s \? 'step' : undefined\}/);
+  assert.match(journey, /aria-label=\{isLocked \? /);
+  assert.match(journey, /sellado hasta resolver Cámara S1/);
+  assert.match(journey, /onClick=\{\(\) => travel\(s\)\}/);
+});
