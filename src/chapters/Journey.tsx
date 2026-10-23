@@ -81,6 +81,9 @@ export default function Journey({ agent, onExit }: Props) {
                   key={s}
                   type="button"
                   onClick={() => travel(s)}
+                  aria-disabled={isLocked}
+                  aria-current={scene === s ? 'step' : undefined}
+                  aria-label={isLocked ? `${SCENE_META[s].label} — sellado hasta resolver Cámara S1` : SCENE_META[s].label}
                   className={`border px-2.5 py-1.5 font-term text-[9px] tracking-[0.18em] transition-all ${
                     scene === s
                       ? 'border-neon bg-neon/15 text-neon shadow-[0_0_14px_rgba(255,7,58,0.25)]'
