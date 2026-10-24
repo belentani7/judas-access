@@ -39,3 +39,13 @@ No se hace identificación facial, reconocimiento biométrico, análisis psicol�
 Fondo casi negro, rojo Judas, señales frías y estética de terminal de ficción. La marca, sus escenarios y las fases existentes se conservan sin eliminar funcionalidades. Los nuevos avisos evitan que se confunda un ritual artístico con una autorización legal o con controles biométricos reales.
 
 **Estado:** implementación de privacidad y contrato de pruebas guardados en una rama de publicación. No afirmar despliegue ni tests aprobados hasta tener un runner ejecutado y comprobar la experiencia completa sobre una URL accesible.
+
+
+## Skin del universo (OMEGA v1.0)
+
+El módulo carga `src/styles/artist-skin.css` tras `index.css` y opta al contrato
+`data-bel-skin="omega"`. La copia procede de `belentani-design-system/artist-skin.css`.
+Esto incorpora tokens de marca y componentes opt-in `bel-*` **sin cambiar** la
+narrativa ni los nueve capítulos. `Syncopate` sigue siendo una variación teatral
+local; se reserva `Orbitron` para nuevas piezas del sistema compartido. La migración
+visual completa y la comprobación en navegador no se dan por concluidas.
