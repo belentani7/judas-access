@@ -1,0 +1,122 @@
+/* BELENTANI / OMEGA — ARTIST SKIN 1.0
+   Opt-in contract. Load AFTER existing project CSS. No global reset, no JS, no CDN.
+   Canonical source: belentani7/belentani-design-system/artist-skin.css
+   Keep exact copies in participating projects until a tested package/release exists.
+*/
+:root {
+  --bel-void: #05030a;
+  --bel-black: #000000;
+  --bel-surface: #0b0610;
+  --bel-ink: #f4f0f2;
+  --bel-muted: #c7bac6;
+  --bel-red: #ff073a;
+  --bel-red-deep: #ad092c;
+  --bel-gold: #d4af37;
+  --bel-cyan: #4de8e0;
+  --bel-edge: rgba(255,7,58,.42);
+  --bel-glass: rgba(18,6,14,.72);
+  --bel-highlight: rgba(255,255,255,.24);
+  --bel-radius: 20px;
+  --bel-radius-small: 12px;
+  --bel-blur: 22px;
+  --bel-ease: cubic-bezier(.22,1,.36,1);
+  --bel-pulse: 4.32s;
+  --bel-display: 'Orbitron','Space Grotesk',system-ui,sans-serif;
+  --bel-body: 'Space Grotesk','Inter',system-ui,sans-serif;
+  --bel-mono: 'Share Tech Mono',ui-monospace,Consolas,monospace;
+  --bel-max-width: 1320px;
+}
+html[data-bel-skin="omega"] {
+  color-scheme: dark;
+  /* Compatibility with established Neoglass and BN dialects.
+     These names intentionally share a single palette, not component styling. */
+  --ng-black: var(--bel-black);
+  --ng-void: var(--bel-void);
+  --ng-void-2: var(--bel-surface);
+  --ng-red: var(--bel-red);
+  --ng-gold: var(--bel-gold);
+  --ng-cyan: var(--bel-cyan);
+  --ng-white: var(--bel-ink);
+  --bn-black: var(--bel-black);
+  --bn-bg: var(--bel-void);
+  --bn-red: var(--bel-red);
+  --bn-gold: var(--bel-gold);
+  --bn-cyan: var(--bel-cyan);
+}
+[data-bel-skin="omega"] .bel-wrap {
+  width: min(calc(100% - 2 * clamp(18px,4vw,56px)),var(--bel-max-width));
+  margin-inline:auto;
+}
+[data-bel-skin="omega"] .bel-eyebrow {
+  color:var(--bel-cyan);font:500 .77rem/1.5 var(--bel-mono);
+  letter-spacing:.17em;text-transform:uppercase;
+}
+[data-bel-skin="omega"] .bel-display {
+  color:var(--bel-ink);font-family:var(--bel-display);
+  font-size:clamp(2.4rem,9vw,8rem);line-height:.98;
+  font-weight:800;letter-spacing:-.045em;text-wrap:balance;
+}
+[data-bel-skin="omega"] .bel-copy {
+  color:var(--bel-muted);font:400 clamp(1rem,1.35vw,1.2rem)/1.7 var(--bel-body);
+  max-width:65ch;
+}
+[data-bel-skin="omega"] .bel-surface {
+  position:relative;isolation:isolate;overflow:hidden;
+  border:1px solid var(--bel-edge);border-radius:var(--bel-radius);
+  background:
+    linear-gradient(152deg,rgba(255,255,255,.09),transparent 38%),
+    linear-gradient(320deg,rgba(255,7,58,.10),transparent 62%),
+    var(--bel-glass);
+  -webkit-backdrop-filter:blur(var(--bel-blur)) saturate(1.45);
+  backdrop-filter:blur(var(--bel-blur)) saturate(1.45);
+  box-shadow:inset 0 1px 0 var(--bel-highlight),
+    inset 0 -18px 35px -27px rgba(255,7,58,.75),
+    0 24px 65px -20px rgba(0,0,0,.8);
+}
+[data-bel-skin="omega"] .bel-surface::before {
+  content:"";position:absolute;inset:0;pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.08) 50%,transparent 65%);
+}
+[data-bel-skin="omega"] .bel-surface > * {position:relative}
+[data-bel-skin="omega"] .bel-card {padding:clamp(1.25rem,3vw,2.5rem)}
+[data-bel-skin="omega"] .bel-button {
+  display:inline-flex;align-items:center;justify-content:center;gap:.65rem;
+  min-height:48px;padding:.85rem 1.5rem;text-decoration:none;cursor:pointer;
+  color:var(--bel-ink);font:600 .83rem/1.2 var(--bel-body);
+  text-transform:uppercase;letter-spacing:.1em;
+  border:1px solid var(--bel-edge);border-radius:999px;
+  background:linear-gradient(140deg,rgba(255,7,58,.22),rgba(30,6,17,.8));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 6px 20px rgba(0,0,0,.45);
+  transition:background .22s var(--bel-ease),box-shadow .22s var(--bel-ease),transform .22s var(--bel-ease);
+}
+[data-bel-skin="omega"] .bel-button:hover {
+  background:linear-gradient(140deg,rgba(255,7,58,.48),rgba(30,6,17,.85));
+  box-shadow:0 0 25px rgba(255,7,58,.27);transform:translateY(-1px);
+}
+[data-bel-skin="omega"] .bel-button--primary {background:var(--bel-red);color:#fff;border-color:var(--bel-red)}
+[data-bel-skin="omega"] .bel-button--primary:hover {background:var(--bel-red-deep)}
+[data-bel-skin="omega"] .bel-chip {
+  display:inline-flex;align-items:center;padding:.38rem .8rem;
+  border:1px solid var(--bel-edge);border-radius:999px;
+  background:rgba(10,3,9,.75);color:var(--bel-ink);
+  font:500 .74rem/1.4 var(--bel-mono);letter-spacing:.08em;
+}
+[data-bel-skin="omega"] :is(.bel-button,.bel-chip,a,button,input,select,textarea):focus-visible {
+  outline:3px solid var(--bel-cyan);outline-offset:3px;
+}
+[data-bel-skin="omega"] [data-bel-accent="gold"] {--bel-edge:rgba(212,175,55,.55)}
+[data-bel-skin="omega"] [data-bel-accent="cyan"] {--bel-edge:rgba(77,232,224,.55)}
+[data-bel-skin="omega"] .bel-rule {
+  height:1px;border:0;background:linear-gradient(90deg,transparent,var(--bel-red),transparent);
+}
+@supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))) {
+  [data-bel-skin="omega"] .bel-surface {background:#160a15}
+}
+@media (prefers-reduced-motion:reduce) {
+  [data-bel-skin="omega"] .bel-button {transition:none}
+  [data-bel-skin="omega"] .bel-button:hover {transform:none}
+}
+@media (prefers-contrast:more) {
+  html[data-bel-skin="omega"] {--bel-muted:#f1e8f0;--bel-edge:rgba(255,255,255,.9);--bel-glass:#160b17}
+}
