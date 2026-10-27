@@ -32,10 +32,17 @@ export default function EscapeRoom({ onSolve, codename }: Props) {
 
   const orderRef = useRef<string[]>([]);
   const extractTimer = useRef<number | null>(null);
+  const solveTimer = useRef<number | null>(null);
   const roomWrapRef = useRef<HTMLDivElement | null>(null);
   const roomRef = useRef<HTMLDivElement | null>(null);
   const scaleRef = useRef(1);
   const reduced = usePrefersReducedMotion();
+
+  // Leaving S1 must cancel extraction and the delayed scene transition.
+  useEffect(() => () => {
+    if (extractTimer.current !== null) window.clearInterval(extractTimer.current);
+    if (solveTimer.current !== null) window.clearTimeout(solveTimer.current);
+  }, []);
 
   /* escala responsive de la sala */
   useEffect(() => {
@@ -142,12 +149,12 @@ export default function EscapeRoom({ onSolve, codename }: Props) {
 
   /* extracción del núcleo (mantener) */
   const startExtract = useCallback(() => {
-    if (solved) return;
+    if (solved || extractTimer.current !== null) return;
     extractTimer.current = window.setInterval(() => {
       setExtract((p) => {
         const n = Math.min(100, p + 4);
         if (n >= 100) {
-          if (extractTimer.current) window.clearInterval(extractTimer.current);
+          if (extractTimer.current !== null) window.clearInterval(extractTimer.current);
           return 100;
         }
         return n;
@@ -156,7 +163,7 @@ export default function EscapeRoom({ onSolve, codename }: Props) {
   }, [solved]);
 
   const stopExtract = useCallback(() => {
-    if (extractTimer.current) {
+    if (extractTimer.current !== null) {
       window.clearInterval(extractTimer.current);
       extractTimer.current = null;
     }
@@ -168,7 +175,10 @@ export default function EscapeRoom({ onSolve, codename }: Props) {
       setSolved(true);
       sfxOk();
       pushLog(`Agente ${codename}: NÚCLEO JUDAS extraído. El viaje continúa.`);
-      window.setTimeout(onSolve, 1200);
+      solveTimer.current = window.setTimeout(() => {
+        solveTimer.current = null;
+        onSolve();
+      }, 1200);
     }
   }, [extract, solved, onSolve, codename]);
 
@@ -216,6 +226,20 @@ export default function EscapeRoom({ onSolve, codename }: Props) {
           onPointerDown={startExtract}
           onPointerUp={stopExtract}
           onPointerLeave={stopExtract}
+          onPointerCancel={stopExtract}
+          onBlur={stopExtract}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              if (!event.repeat) startExtract();
+            }
+          }}
+          onKeyUp={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              stopExtract();
+            }
+          }}
           disabled={solved}
           className="btn-neon relative mt-6 w-64 overflow-hidden text-sm"
         >

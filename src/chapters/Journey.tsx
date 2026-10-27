@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import type { AgentData } from '../lib/types';
 import { REDIRECT_URL } from '../lib/constants';
+import { canTravel } from '../lib/journey-navigation.mjs';
 import PlanetViewer from './PlanetViewer';
 import Hyperspace from './Hyperspace';
 import EscapeRoom from './EscapeRoom';
@@ -28,11 +29,12 @@ export default function Journey({ agent, onExit }: Props) {
   const [warpTo, setWarpTo] = useState<Scene | null>(null);
   const [roomSolved, setRoomSolved] = useState(false);
   const [coreDone, setCoreDone] = useState(false);
+  const [archiveVisited, setArchiveVisited] = useState(false);
 
   const travel = useCallback(
-    (target: Scene) => {
+    (target: Scene, justSolved = false) => {
       if (target === scene) return;
-      if (target === 'core' && !roomSolved) {
+      if (!canTravel(scene, target, roomSolved, justSolved)) {
         pushLog('El Núcleo está sellado: primero abre la Cámara S1.');
         beep(160, 0.15, 'sawtooth', 0.03);
         return;
@@ -46,6 +48,7 @@ export default function Journey({ agent, onExit }: Props) {
   const onWarpDone = useCallback(() => {
     if (warpTo) {
       setScene(warpTo);
+      if (warpTo === 'archive') setArchiveVisited(true);
       pushLog(`Salto hiperespacial completado: ${SCENE_META[warpTo].label}.`);
     }
     setWarpTo(null);
@@ -78,6 +81,9 @@ export default function Journey({ agent, onExit }: Props) {
                   key={s}
                   type="button"
                   onClick={() => travel(s)}
+                  aria-disabled={isLocked}
+                  aria-current={scene === s ? 'step' : undefined}
+                  aria-label={isLocked ? `${SCENE_META[s].label} — sellado hasta resolver Cámara S1` : SCENE_META[s].label}
                   className={`border px-2.5 py-1.5 font-term text-[9px] tracking-[0.18em] transition-all ${
                     scene === s
                       ? 'border-neon bg-neon/15 text-neon shadow-[0_0_14px_rgba(255,7,58,0.25)]'
@@ -126,7 +132,9 @@ export default function Journey({ agent, onExit }: Props) {
               codename={agent.codename}
               onSolve={() => {
                 setRoomSolved(true);
-                travel('core');
+                // React state updates asynchronously: permit this one transition
+                // immediately after solving the room, never before.
+                travel('core', true);
               }}
             />
           )}
@@ -152,7 +160,8 @@ export default function Journey({ agent, onExit }: Props) {
               <span className="text-dim">VÍNCULO DE VOZ {coreDone ? 'CONFIRMADO' : 'PENDIENTE'}</span>
             </p>
             <p className="font-term text-[10px] tracking-[0.2em]">
-              <span className="text-term">✓</span> <span className="text-dim">ARCHIVO VENOM DESENCRYPTADO</span>
+              <span className={archiveVisited ? 'text-term' : 'text-neon'}>{archiveVisited ? '✓' : '▲'}</span>{' '}
+              <span className="text-dim">ARCHIVO VENOM {archiveVisited ? 'RECUPERADO' : 'PENDIENTE'}</span>
             </p>
           </div>
 
