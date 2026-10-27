@@ -22,7 +22,7 @@ test("normal navigation and invalid targets cannot bypass unlock", () => {
 test("real EscapeRoom uses justSolved flag to bypass stale React closure", () => {
   const source=readFileSync(new URL("../src/chapters/Journey.tsx",import.meta.url),"utf8");
   assert.match(source,/setRoomSolved\(true\);[\s\S]{0,200}travel\('core', true\)/);
-  assert.match(source,/canTravel\(scene, target, roomSolved \|\| justSolved\)/);
+  assert.match(source,/canTravel\(scene, target, roomSolved, justSolved\)/);
 });
 
 test("archive status only claims recovered after navigating to archive", () => {
@@ -41,4 +41,30 @@ test("chapter navigation announces current scene and locked core to screen reade
   assert.match(journey, /aria-label=\{isLocked \? /);
   assert.match(journey, /sellado hasta resolver Cámara S1/);
   assert.match(journey, /onClick=\{\(\) => travel\(s\)\}/);
+});
+
+// The immediate unlock token is only valid while the visitor is in S1.
+test("justSolved cannot bypass S1 from another chapter", () => {
+  assert.equal(canTravel("room", "core", false, true), true);
+  assert.equal(canTravel("orbit", "core", false, true), false);
+  assert.equal(canTravel("archive", "core", false, true), false);
+  assert.equal(canTravel("room", "core", false, "true"), false);
+  assert.equal(canTravel("archive", "core", true), true);
+});
+
+test("room cleanup cancels delayed onSolve and ongoing extraction", () => {
+  const source = readFileSync("src/chapters/EscapeRoom.tsx", "utf8");
+  assert.match(source, /if \(solveTimer\.current !== null\) window\.clearTimeout\(solveTimer\.current\)/);
+  assert.match(source, /if \(extractTimer\.current !== null\) window\.clearInterval\(extractTimer\.current\)/);
+  assert.match(source, /solveTimer\.current = window\.setTimeout\(\(\) => \{/);
+  assert.doesNotMatch(source, /window\.setTimeout\(onSolve, 1200\)/);
+});
+
+test("S1 extraction supports keyboard and cancelled pointer gestures", () => {
+  const source = readFileSync("src/chapters/EscapeRoom.tsx", "utf8");
+  assert.match(source, /onKeyDown=\{\(event\) => \{/);
+  assert.match(source, /onKeyUp=\{\(event\) => \{/);
+  assert.match(source, /onPointerCancel=\{stopExtract\}/);
+  assert.match(source, /onBlur=\{stopExtract\}/);
+  assert.match(source, /if \(solved \|\| extractTimer\.current !== null\) return/);
 });

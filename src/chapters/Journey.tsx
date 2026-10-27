@@ -34,7 +34,7 @@ export default function Journey({ agent, onExit }: Props) {
   const travel = useCallback(
     (target: Scene, justSolved = false) => {
       if (target === scene) return;
-      if (!canTravel(scene, target, roomSolved || justSolved)) {
+      if (!canTravel(scene, target, roomSolved, justSolved)) {
         pushLog('El Núcleo está sellado: primero abre la Cámara S1.');
         beep(160, 0.15, 'sawtooth', 0.03);
         return;
